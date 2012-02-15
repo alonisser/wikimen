@@ -17,14 +17,5 @@ $(document).ready(function(){
         }
         
     });
-    
-    
-
+        
 });
-
-
-
-
-
-
-

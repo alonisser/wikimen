@@ -11,9 +11,6 @@ init_db()
 session = load_session()
 
 
-#@route("/")
-#def url():
-#    return {'url':url}
 @route()
 def defualt():
     redirect("/monitor")
@@ -27,7 +24,7 @@ def monitor():
     try:
         all = session.query(Wikilink).filter(Wikilink.title.like('%'+ title +'%')).count()
         monitor = session.query(Wikilink).order_by('id').filter(Wikilink.title.like('%'+ title +'%')).filter(Wikilink.id>(page*20)).limit(20).all()
-    except StatmentError:
+    except StatementError:
         session.rollback()
         session.begin()
         
@@ -61,5 +58,5 @@ def error404(error):
     return static_file('404.html',root="./static")
 
 
-#bottle.run (host='localhost',port =8080)
-bottle.run (host = '127.0.0.1',server='paste', port = 8080)
+bottle.run (host='localhost',port =8080)
+#bottle.run (host = '127.0.0.1',server='paste', port = 48035)
