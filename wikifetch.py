@@ -3,7 +3,7 @@
 
 import requests,json
 from datetime import datetime,date
-connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname
+connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname change to real db params
 from sqlalchemy import create_engine,String,Unicode,Integer, Column
 engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
 
@@ -11,22 +11,15 @@ from sqlalchemy.orm import sessionmaker
 
 from sqlalchemy.ext.declarative import declarative_base
 Base  = declarative_base()
-#metadata = Base.metadata
-#metadata.bind = engine
+
 
 def init_db():
-    connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname
+    connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname change to real db params
     engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
-    #return engine
-    #metadata = Base.metadata
-    #metadata.bind = engine
-    #Wikilinks.metadata.create_all(engine)
+
 
 def load_session():
-    #connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/pydb?charset=utf8&use_unicode=0" #user:password@server:port/dbname
-    #engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
-    #metadata = Base.metadata
-    #metadata.bind = engine
+
     Session = sessionmaker(bind = engine)
     session = Session() #the session used to communicate with the db
     return session
