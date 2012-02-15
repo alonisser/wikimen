@@ -2,7 +2,7 @@
 #-*- coding:UTF-8 -*-
 
 from bottle import route,run, view, error, static_file, debug, url, redirect, request, response
-from wikifetch import wikimonitor, init_db,load_session,Wikilink
+from wikifetch import init_db,load_session,Wikilink
 import bottle
 
 debug(True)

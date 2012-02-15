@@ -15,7 +15,7 @@
 %from bottle import url
 	<link rel="stylesheet" href="{{url("static",filepath= "css/style.css")}}">
 
-	<script src="{{url("static",filepath = "js/libs/modernizr.h5bp.custom.js")}}"></script>
+	<script src="{{url("static",filepath="js/Libs/modernizr.js")}}"></script>
 	
 </head>
 <body>

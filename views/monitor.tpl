@@ -20,7 +20,7 @@
         <ul class="paging">
             %for i in range(0,pages,1):
             <li>
-                <a href ="#" id="{{i}}" onclick=changePage({{i}})>
+                <a href ="#" id="page-{{i}}" onclick=changePage({{i}})>
                 {{i+1}}
                 </a>
             </li>
@@ -29,6 +29,7 @@
     </div>
         
     </p>
+    
     <section>
         <p><a href="http://t.co/szecd3nI" target="_blank">והנה גם קצת סטטיסטיקות בנושא:</a>תודות לדביר וולק</p>
     </section>

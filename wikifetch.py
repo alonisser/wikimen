@@ -39,6 +39,10 @@ class Wikilink(Base):
     timestamp = Column(String(50))
 
 def wiki_populate():
+    '''a function to populate the db with wikipedia edits
+    initializing the db and creating the tables if needed.
+    iterating through the whole goverment ip range and calling wikifetch fucntion for each ip'''
+    
     init_db()
     Wikilink.metadata.create_all(engine)
     
@@ -55,6 +59,8 @@ def wiki_populate():
             continue
     
 def wikifetch(ip,more = None):
+    '''A function that does the actuall fetching of edits from wikipedia api'''
+    
     session = load_session()
     timestamp = datetime.now().isoformat()
     headers = {'User-Agent':'wikipediagovmonitoring'}
@@ -87,27 +93,6 @@ def wikifetch(ip,more = None):
             
         if content.get('query-continue',False):
             wikifetch(ip,more =content['query-continue']['usercontribs']["uccontinue"])
-    
-def wikimonitor(dump=None):
-    
-    ip_range = []
-    
-    ip_range = ['147.237.70']#debuggin
-    headers = {'User-Agent':'wikipediagovmonitoring'}
-    result = []
-    for ip in ip_range:
-        query = 'http://he.wikipedia.org/w/api.php?action=query&list=usercontribs&format=json&uclimit=100&ucuserprefix=%s&ucdir=newer&ucprop=title|ids' % ip
-        print ip
-        try:        
-            r = requests.get(query,headers=headers)
-        except:
-            continue
-        if r.ok:
-            content = json.loads(r.content)
-            for i in content['query']['usercontribs']:
-                edit = {'source':i['user'],'title':i['title'],'page':i['pageid'],'revision':i['revid']}
-                #print edit
-                result.append(edit)
-
-    if dump:
-        return result
+def schedule():
+    '''this would be the scheduling function, running the fetch as a cron job'''
+    pass
