@@ -2,7 +2,12 @@
 
 */
 function changePage(page){
+    var search = window.location.search;
+    if (search.indexOf('title')==-1){
     window.location.search = "page="+page;
+    } else {
+        window.location.search = search.split('&')[0]+"&page="+page;
+    }
     
 }
 
