@@ -3,8 +3,9 @@
 
 import requests,json
 from datetime import datetime,date
-connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname change to real db params
-from sqlalchemy import create_engine,String,Unicode,Integer, Column
+from config import connectstring
+
+from sqlalchemy import create_engine,String,Unicode,Integer, Column, func,distinct
 engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
 
 from sqlalchemy.orm import sessionmaker
@@ -14,7 +15,7 @@ Base  = declarative_base()
 
 
 def init_db():
-    connectstring = "mysql+mysqldb://pyuser:pyuser@localhost:3306/wikidb?charset=utf8&use_unicode=0" #user:password@server:port/dbname change to real db params
+    
     engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
 
 
@@ -92,7 +93,25 @@ def wikifetch(ip,more = None):
             session.flush()
             
         if content.get('query-continue',False):
-            wikifetch(ip,more =content['query-continue']['usercontribs']["uccontinue"])
+            wikifetch(ip,more =content['query-continue']['usercontribs']["uccontinue"])#recursive call to the function if there is more data in the same Ip
 def schedule():
     '''this would be the scheduling function, running the fetch as a cron job'''
     pass
+
+def statistic():
+    '''some statistics about the usage including number, most edited, etc
+    return result packed in a tuple'''
+    session = load_session()
+    total = session.query(Wikilink).count();
+    used_ip_num = session.query(func.count(distinct(Wikilink.user_ip))).scalar() #scalar to return a number
+    most_used_ip_addresses = session.query(func.count(Wikilink.user_ip),Wikilink.user_ip).group_by(Wikilink.user_ip).order_by(func.count(Wikilink.user_ip)).all()
+    #most_used_ip_addresses.sort()
+    most_edited_ip_ten = most_used_ip_addresses[-10:]#.reverse() #top ten ip list
+    most_edited_ip_ten.reverse()
+    title_num = session.query(func.count(distinct(Wikilink.title))).scalar()
+    most_edited_titles = session.query(func.count(Wikilink.title),Wikilink.title, Wikilink.id).group_by(Wikilink.title).order_by(func.count(Wikilink.title)).all()
+    most_edited_titles_ten = most_edited_titles[-10:]#.reverse() #top ten title edits
+    most_edited_titles_ten.reverse()
+                              
+    return (total,used_ip_num, most_edited_ip_ten,title_num,most_edited_titles_ten)
+    

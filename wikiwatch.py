@@ -2,14 +2,15 @@
 #-*- coding:UTF-8 -*-
 
 from bottle import route,run, view, error, static_file, debug, url, redirect, request, response
-from wikifetch import init_db,load_session,Wikilink
+from wikifetch import init_db,load_session,Wikilink, statistic
 import bottle
-
+from sqlalchemy.exc import StatementError
+from config import production_port, production_server
 debug(True)
 
 init_db()
 session = load_session()
-
+stats = statistic()
 
 @route()
 def defualt():
@@ -18,18 +19,20 @@ def defualt():
 @route(["/monitor","/index","/"])
 @view("monitor")
 def monitor():
-    title = unicode(request.query.title) or '%'
+    title = request.query.title
     page = request.query.page or 0
     page = int(page)
     try:
+        total = stats[0]
         all = session.query(Wikilink).filter(Wikilink.title.like('%'+ title +'%')).count()
-        monitor = session.query(Wikilink).order_by('id').filter(Wikilink.title.like('%'+ title +'%')).filter(Wikilink.id>(page*20)).limit(20).all()
+        monitor = session.query(Wikilink).order_by('title').filter(Wikilink.title.like('%'+ title +'%')).offset(page*20).limit(20).all() #filter(Wikilink.id>(page*20))
+        #print "page=",page," title=",title,
     except StatementError:
         session.rollback()
-        session.begin()
+        #session.begin()
         
     #print monitor
-    return dict(monitor=monitor,pages=(all/20),number=all)
+    return dict(monitor=monitor,pages=(all/20),number=all,total = total)
 
 @route("/why")
 @view("why")
@@ -45,7 +48,17 @@ def about():
 @view("learned")
 def learned():
     return dict()
+    
+@route("/api")
+def api():
+    '''very basic json that throws all the data..not fully developed yet
+    maybe some kind of predicate..'''
+    monitor = session.query(Wikilink).order_by(Wikilink.title).all()
 
+@route("/stats")
+@view("stats")
+def statistic():
+    return dict(stats= stats)
 
 @route ("/static/<filepath:path>", name="static")
 def static(filepath):
@@ -59,4 +72,4 @@ def error404(error):
 
 
 bottle.run (host='localhost',port =8080)
-#bottle.run (host = '127.0.0.1',server='paste', port = 48035)
+#bottle.run (host = '127.0.0.1',server= production_server, port = production_port)

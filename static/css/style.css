@@ -163,15 +163,19 @@ div#footer-container footer img {
 div#footer-container h3 {
 	text-align: center;
 }
-div#wiki-list ul {
+/*div#wiki-list ul {
 	list-style: none;
 	
+}*/
+
+ul.list-display {
+	list-style: none;
 }
-div#wiki-list a, aside a {
+ul.list-display a, aside a {
 	text-decoration: none;
 }
 
-div#wiki-list>ul a:hover{
+ul.list-display a:hover{
 	text-decoration: underline;
 	color:green;
 }
@@ -224,7 +228,7 @@ input.search {
 	
 	nav a{
 		float:right;
-		width:15%;
+		width:10%;
 		margin:0 1.7%;
 		padding:25px 2%;
 		margin-bottom:0;
@@ -268,7 +272,7 @@ input.search {
 
 	nav{
 		float:left;
-		width:60%;
+		width:70%;
 	}
 
 /* ============

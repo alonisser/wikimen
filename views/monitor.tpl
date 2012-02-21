@@ -7,7 +7,7 @@
     <div id ="wiki-list">    
     <label for="wikisearch">לחיפוש בערכים: </label><input id = "wikisearch" class="search" placeholder="התחילי להקליד את שם הערך"/>
     
-        <ul class="wiki-content" >
+        <ul class="wiki-content list-display" >
         %for m in monitor:
         %term = m.title
         %source = m.user_ip
@@ -17,7 +17,7 @@
         </li>
             %end
     </ul>        
-        <ul class="paging">
+        <ul class="paging list-display">
             %for i in range(0,pages,1):
             <li class = "pager">
                 <a href ="#" id="page-{{i}}" onclick=changePage({{i}})>
@@ -31,7 +31,7 @@
     </p>
     
     <section>
-        <p><a href="http://t.co/szecd3nI" target="_blank">והנה גם קצת סטטיסטיקות בנושא:</a>תודות לדביר וולק</p>
+        <p><a href="/stats">קצת סטטיסטיקה</a></p>
     </section>
 </article>
 

@@ -30,6 +30,7 @@
 					<li><a href="/about">מה זה</a></li>
 					<li><a href="/why">למה</a></li>
 					<li><a href="/learned">מה למדנו</a></li>
+					<li><a href="/stats">סטטיסטיקה</a></li>
 				</ul>
 			</nav>
 		</header>
