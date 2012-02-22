@@ -15,7 +15,7 @@ the scraping of wikipedia api is handled by wikifetch.py while the main app is w
 the templates - using simpletemplate engine are in /views directory.
 and all the static content in (as you can guess) in /static directory.
 running with a [PASTER][d6] httpserver
-[d6]http://pythonpaste.org/
+[d6]:http://pythonpaste.org/
 
 python 2.6 is needed for requests
 
