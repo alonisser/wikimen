@@ -5,7 +5,7 @@ import requests,json
 from datetime import datetime,date
 from config import connectstring
 
-from sqlalchemy import create_engine,String,Unicode,Integer, Column, func,distinct
+from sqlalchemy import create_engine,String,Unicode,Integer, Column, func,distinct, desc
 engine = create_engine(connectstring) #created the engine connecting sqlalchemy to the db
 
 from sqlalchemy.orm import sessionmaker
@@ -38,6 +38,14 @@ class Wikilink(Base):
     page = Column(String(20))
     revision = Column(String(20))
     timestamp = Column(String(50))
+
+    def to_dict(self):
+        try:
+            title = self.title.encode('utf-8')
+        except:
+            title = self.title
+        
+        return {'id':self.id, 'title':title, 'Ip':self.user_ip,'revision':self.revision,'page':self.page}
 
 def wiki_populate():
     '''a function to populate the db with wikipedia edits
@@ -104,14 +112,14 @@ def statistic():
     session = load_session()
     total = session.query(Wikilink).count();
     used_ip_num = session.query(func.count(distinct(Wikilink.user_ip))).scalar() #scalar to return a number
-    most_used_ip_addresses = session.query(func.count(Wikilink.user_ip),Wikilink.user_ip).group_by(Wikilink.user_ip).order_by(func.count(Wikilink.user_ip)).all()
+    most_used_ip_addresses = session.query(func.count(Wikilink.user_ip),Wikilink.user_ip).group_by(Wikilink.user_ip).order_by(desc(func.count(Wikilink.user_ip))).all()
     #most_used_ip_addresses.sort()
-    most_edited_ip_ten = most_used_ip_addresses[-10:]#.reverse() #top ten ip list
-    most_edited_ip_ten.reverse()
+    most_edited_ip_ten = most_used_ip_addresses[0:10]#.reverse() #top ten ip list
+    #most_edited_ip_ten.reverse()
     title_num = session.query(func.count(distinct(Wikilink.title))).scalar()
-    most_edited_titles = session.query(func.count(Wikilink.title),Wikilink.title, Wikilink.id).group_by(Wikilink.title).order_by(func.count(Wikilink.title)).all()
-    most_edited_titles_ten = most_edited_titles[-10:]#.reverse() #top ten title edits
-    most_edited_titles_ten.reverse()
+    most_edited_titles = session.query(func.count(Wikilink.title),Wikilink.title).group_by(Wikilink.title).order_by(desc(func.count(Wikilink.title))).all()
+    most_edited_titles_ten = most_edited_titles[0:10]#.reverse() #top ten title edits
+    #most_edited_titles_ten.reverse()
                               
     return (total,used_ip_num, most_edited_ip_ten,title_num,most_edited_titles_ten)
     

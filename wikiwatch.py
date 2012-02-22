@@ -6,6 +6,7 @@ from wikifetch import init_db,load_session,Wikilink, statistic
 import bottle
 from sqlalchemy.exc import StatementError
 from config import production_port, production_server
+import json
 debug(True)
 
 init_db()
@@ -51,9 +52,19 @@ def learned():
     
 @route("/api")
 def api():
+    off = request.query.off or 0
+    lim = request.query.lim or False
     '''very basic json that throws all the data..not fully developed yet
     maybe some kind of predicate..'''
-    monitor = session.query(Wikilink).order_by(Wikilink.title).all()
+    if lim:
+        monitor = session.query(Wikilink).order_by(Wikilink.title).offset(off).limit(lim).all()
+    else:
+        monitor = session.query(Wikilink).order_by(Wikilink.title).offset(off).all()
+    jsonstr = []    
+    for i in monitor:
+        jsonstr.append(i.to_dict())
+    return json.dumps(jsonstr)
+    
 
 @route("/stats")
 @view("stats")
