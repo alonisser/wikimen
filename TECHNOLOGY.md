@@ -18,4 +18,3 @@ running with a [PASTER][d6] httpserver
 [d6]:http://pythonpaste.org/
 
 python 2.6 is needed for requests
-
