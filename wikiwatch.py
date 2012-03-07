@@ -2,7 +2,7 @@
 #-*- coding:UTF-8 -*-
 
 from bottle import route,run, view, error, static_file, debug, url, redirect, request, response
-from wikifetch import init_db,load_session,Wikilink, statistic
+from wikifetch import init_db,load_session,Wikilink, statistic, wiki_populate
 import bottle
 from sqlalchemy.exc import StatementError
 from config import production_port, production_server
@@ -11,11 +11,20 @@ debug(True)
 
 init_db()
 session = load_session()
-stats = statistic()
+try:
+    stats = statistic()
+except:
+    redirect ("/bootstrap")
 
 @route()
-def defualt():
+def default():
     redirect("/monitor")
+
+@route("/bootstrap")
+def bootstrap():
+    wiki_populate()
+    redirect("/monitor")
+    
 
 @route(["/monitor","/index","/"])
 @view("monitor")
@@ -81,6 +90,9 @@ def static(filepath):
 def error404(error):
     return static_file('404.html',root="./static")
 
+@error([500, 502])
+def error500(error):
+    return static_file('500.html', root = "./static")
 
 bottle.run (host='localhost',port =8080)
 #bottle.run (host = '127.0.0.1',server= production_server, port = production_port)
