@@ -17,4 +17,7 @@ and all the static content in (as you can guess) in /static directory.
 running with a [PASTER][d6] httpserver
 [d6]:http://pythonpaste.org/
 
+everything can be simpy installed by running:
+pip install -r require.txt
+
 python 2.6 is needed for requests
